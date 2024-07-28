@@ -18,7 +18,7 @@ import Cookies from "js-cookie"; // import js-cookie
 const LoginPage = () => {
   const router = useRouter();
   const { data: session, status :sessionStatus} = useSession();
-
+console.log(session,'session');
   // useEffect(() => {
   //   if (status === "authenticated") {
   //     const userType = session?.user?.usertype; // Optional chaining to avoid errors
@@ -59,12 +59,14 @@ const LoginPage = () => {
           toast.error("Credential Error");
           // if (res.url) router.replace("/");
         } else {
+          toast.success("Successful Login");
+
           // const userType = res.user.usertype;
           // const token = jwt.sign({ userType }, process.env.JWT_SECRET, { expiresIn: "1h" });
           // Cookies.set(userType === "Patient" ? "token-patient" : "token-doctor", token);
-
-          toast.success("Successful Login");
-          router.replace("/");
+          const userType = session?.user?.usertype;
+          router.replace(userType === "Patient" ? "/patient" : "/doctor");
+          // router.replace("/");
 
           // router.replace(userType === "Patient" ? "/patient" : "/doctor");
         }
