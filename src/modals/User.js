@@ -9,7 +9,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
     username: {
       type: String,
@@ -17,8 +17,8 @@ const userSchema = new Schema(
     },
     phone: {
       type: String,
-      required: true,
-      unique: true,
+      // required: true,
+      // unique: true,
     },
     isPatiant: {
       type: Boolean,
@@ -31,11 +31,9 @@ const userSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      required: true,
     },
     updatedAt: {
       type: Date,
-      required: true,
     },
   },
   { timestamps: true }

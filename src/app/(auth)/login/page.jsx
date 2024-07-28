@@ -3,20 +3,39 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { signIn, useSession } from "next-auth/react";
-import { TextField, Button, Container, Typography, CircularProgress } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie"; // import js-cookie
 
 const LoginPage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-console.log(session,'session');
+  const { data: session, status :sessionStatus} = useSession();
+
+  // useEffect(() => {
+  //   if (status === "authenticated") {
+  //     const userType = session?.user?.usertype; // Optional chaining to avoid errors
+  //     if (userType === "Patient") {
+  //       router.replace("/patient");
+  //     } else if (userType === "Doctor") {
+  //       router.replace("/doctor");
+  //     } else {
+  //       router.replace("/");
+  //     }
+  //   }
+  // }, [status, router, session]);
   useEffect(() => {
-    if (status === "authenticated") {
+    if (sessionStatus === "authenticated") {
       router.replace("/");
     }
-  }, [status, router]);
+  }, [ router, session]);
 
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
@@ -38,10 +57,16 @@ console.log(session,'session');
         });
         if (res?.error) {
           toast.error("Credential Error");
-          if (res.url) router.replace("/");
+          // if (res.url) router.replace("/");
         } else {
+          // const userType = res.user.usertype;
+          // const token = jwt.sign({ userType }, process.env.JWT_SECRET, { expiresIn: "1h" });
+          // Cookies.set(userType === "Patient" ? "token-patient" : "token-doctor", token);
+
           toast.success("Successful Login");
           router.replace("/");
+
+          // router.replace(userType === "Patient" ? "/patient" : "/doctor");
         }
       } catch (error) {
         console.log(error);
@@ -96,9 +121,9 @@ console.log(session,'session');
             type="submit"
             className="mb-4 border-main text-main hover:border-main"
           >
-            {loading ? <CircularProgress size={24}/> : "Login"}
+            {loading ? <CircularProgress size={24} /> : "Login"}
           </Button>
-          <Button
+          {/* <Button
             variant="outlined"
             fullWidth
             disabled={loading}
@@ -106,6 +131,16 @@ console.log(session,'session');
             className="mb-4 border-main text-main hover:border-main"
           >
             Login with Google
+          </Button> */}
+          <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            disabled={loading}
+            onClick={() => signIn("github")}
+            className="mb-4 border-main text-main hover:border-main"
+          >
+            Login with Github
           </Button>
           <span className="text-slate-400 text-sm">
             Don't have an account? <Link href={`/register`}>Register</Link>
